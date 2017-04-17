@@ -62,7 +62,6 @@
                       <div class="control-group <?php echo !empty($passwordError)?'error':'';?>"> 
                         <label class="control-label">Password</label> 
                         <div class="controls"> 
-						Use "1234"
                               <input name="password" type="password" placeholder="password" value="<?php echo !empty($password)?$password:'';?>"> 
                               <?php if (!empty($passwordError)): ?> 
                                   <span class="help-inline"><?php echo $passwordError;?></span> 

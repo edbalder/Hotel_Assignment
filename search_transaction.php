@@ -31,13 +31,14 @@
 						<th>Customer Name</th>
 						<th>Date</th>
 						<th>Room Number</th>
+						<th>Number of Guests</th>
 						</tr>
 					</thead>
 					<tbody>
 					<?php
 					$pdo = Database::connect();
 					$sql = 'select * 
-							from (select transactionNumber, date_time, roomId, name,cardNumber 
+							from (select transactionNumber, date_time, roomId, name,cardNumber, numberOfGuests 
 								from transactions  
 								join guests on guestId = guests.id 
 								order by transactionNumber ASC) 
@@ -51,6 +52,7 @@
 								echo '<td>'. $row['name'] . '</td>';
 								echo '<td>'. $row['date_time'] . '</td>';
 								echo '<td>'. $row['room_number'] . '</td>';
+								echo '<td>'. $row['numberOfGuests'] . '</td>';
 								echo '</td>';
 								echo '</tr>';
 					}

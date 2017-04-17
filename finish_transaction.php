@@ -109,12 +109,23 @@
 								</p>
 							</div>
 						</div>
-						<div class="control-group">
+						<!-- <div class="control-group">
 							<label class="control-label">Number of Guests</label>
 							<div class="controls">
 								<p>
 									<input type="text" name="numberOfGuests" placeholder="Number Of Guests" value="<?php echo !empty($numberOfGuests)?$numberOfGuests:'';?>"><br>
 								</p>
+							</div>
+						</div> -->
+						<div class="control-group">
+							<label class="control-label">Number of Guests DropDown</label>
+							<div class="controls">
+								<select name="numberOfGuests" >
+									<option> 1 </option>
+									<option> 2 </option>
+									<option> 3 </option>
+									<option> 4 </option>
+								</select>
 							</div>
 						</div>
 						
