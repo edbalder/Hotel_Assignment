@@ -11,10 +11,11 @@
     if ( !empty($_GET['SelectedGuestId'])) {
         $SelectedGuestId = $_REQUEST['SelectedGuestId'];
     }
-	$SelectedRoomId = null;
-    if ( !empty($_GET['SelectedRoomId'])) {
-        $SelectedRoomId = $_REQUEST['SelectedRoomId'];
-    }
+	
+	$SelectedFloor = null;
+	if(!empty($_GET['SelectedFloor'])) {
+		$SelectedFloor = $_REQUEST['SelectedFloor'];
+	}
      
     
     $pdo = Database::connect();
@@ -41,6 +42,7 @@
 	
 	if(!empty($_POST)){
 		$numberOfGuests = $_POST['numberOfGuests'];
+		$SelectedRoomId = $_POST['theRoom'];
 		print_r([$SelectedGuestId,$SelectedRoomId,$numberOfGuests]);
 		$pdo = Database::connect();
         $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
@@ -74,6 +76,7 @@
 							<div class="controls">
 								<p name="theName">
 									<?php echo $GuestName;?>
+									<a class="btn" href="sale_menu.php">    Change Customer</a>
 								</p>
 							</div>
 						</div>
@@ -96,27 +99,18 @@
 						<div class="control-group">
 							<label class="control-label">Room Number</label>
 							<div class="controls">
-								<p name="theRoom">								
-									<?php echo $RoomNumber;?>
-								</p>
+								<select name="theRoom">	
+									<?php
+									$pdo = Database::connect();
+									$sql = "SELECT * FROM rooms WHERE floor = '".$SelectedFloor."' ORDER BY room_number ASC";
+									foreach ($pdo->query($sql) as $row) {
+									echo '<option value="'.$row['room_id'].'">'.$row['room_number'].' '.$row['roomType'].' Beds: '.$row['beds'].'</option>';
+									}
+									Database::disconnect();
+									?>
+								</select>
 							</div>
 						</div>
-						<div class="control-group">
-							<label class="control-label">Beds</label>
-							<div class="controls">
-								<p name="theBeds">
-									<?php echo $RoomBeds;?>
-								</p>
-							</div>
-						</div>
-						<!-- <div class="control-group">
-							<label class="control-label">Number of Guests</label>
-							<div class="controls">
-								<p>
-									<input type="text" name="numberOfGuests" placeholder="Number Of Guests" value="<?php echo !empty($numberOfGuests)?$numberOfGuests:'';?>"><br>
-								</p>
-							</div>
-						</div> -->
 						<div class="control-group">
 							<label class="control-label">Number of Guests DropDown</label>
 							<div class="controls">
@@ -126,6 +120,7 @@
 									<option> 3 </option>
 									<option> 4 </option>
 								</select>
+								</br>
 							</div>
 						</div>
 						

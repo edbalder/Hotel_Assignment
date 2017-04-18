@@ -8,6 +8,28 @@
 	}
 	
 	if(!empty($_POST)){
+		ini_set('file-uploads',true);
+		if($_FILES['customerImage']['size']>0 && $_FILES['customerImage']['size']<2000000){
+			$fileName = $_FILES['customerImage']['name'];
+			$tempName = $_FILES['customerImage']['tmp_name'];
+			$filesize = $_FILES['customerImage']['size'];
+			$filetype = $_FILES['customerImage']['type'];
+			
+			$filetype = (get_magic_quotes_gpc() == 0
+				? mysql_real_escape_string($filetype)
+				: mysql_real_escape_string(stripslashes($_FILES['customerImage'])));
+				
+			$fp = fopen($tempName, 'r');
+			$content = fread($fp, filesize($tempName));
+			$content = addslashes($content);
+			
+			fclose($fp);
+			
+			if(!get_magic_quotes_gpc()) {
+				$filename = addslashes($filename);
+			}
+		}
+		
 		$id = $_POST['id'];
 		$cardNumber = $_POST['cardNumber'];
 		$phoneNumber = $_POST['phoneNumber'];
@@ -44,7 +66,7 @@
                       <div class="control-group">
                         <label class="control-label">ID Number</label>
                         <div class="controls">
-                            <input name="id" type="text"  placeholder="ID" value="<?php echo !empty($id)?$id:'';?>">
+                            <input name="id" type="text" maxlength="11" placeholder="ID" value="<?php echo !empty($id)?$id:'';?>">
                         </div>
 						
                       </div>
@@ -58,16 +80,19 @@
                       <div class="control-group">
                         <label class="control-label">Card Number</label>
                         <div class="controls">
-                            <input name="cardNumber" type="text"  placeholder="CC Number" value="<?php echo !empty($cardNumber)?$cardNumber:'';?>">
+                            <input name="cardNumber" type="text" maxlength="11"  placeholder="CC Number" value="<?php echo !empty($cardNumber)?$cardNumber:'';?>">
                         </div>
                       </div>
 					  
 					  <div class="control-group">
                         <label class="control-label">Phone Number</label>
                         <div class="controls">
-                            <input name="phoneNumber" type="text"  placeholder="Phone Number" value="<?php echo !empty($phoneNumber)?$phoneNumber:'';?>">
+                            <input name="phoneNumber" type="text" maxlength="11" placeholder="Phone Number" value="<?php echo !empty($phoneNumber)?$phoneNumber:'';?>">
                         </div>
                       </div>
+					  
+					  <input type="file" name="customerImage" id="customerImage" />
+					  </br>
 					  
                       <div class="form-actions">
                           <button type="submit" class="btn btn-success">Create</button>

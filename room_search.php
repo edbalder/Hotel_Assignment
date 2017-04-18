@@ -24,10 +24,13 @@
 	<body>
     <div class="container">
             <div class="row">
-                <h3>Select Room</h3>
+                <h3>Select Floor</h3>
             </div>
             <div class="row">
-                <table class="table table-striped table-bordered">
+			<a class="btn" href="<?php echo 'finish_transaction.php?SelectedGuestId='.$SelectedGuestId.'&SelectedFloor=3'?>"> 3rd </a></br>
+			<a class="btn" href="<?php echo 'finish_transaction.php?SelectedGuestId='.$SelectedGuestId.'&SelectedFloor=2'?>"> 2nd </a></br>
+			<a class="btn" href="<?php echo 'finish_transaction.php?SelectedGuestId='.$SelectedGuestId.'&SelectedFloor=1'?>"> 1st </a></br>
+                <!-- <table class="table table-striped table-bordered">
                   <thead>
                     <tr>
                       <th>Room Number</th>
@@ -52,7 +55,7 @@
                    Database::disconnect();
                   ?>
                   </tbody>
-            </table>
+            </table> -->
         </div>
     </div> <!-- /container -->
   </body>
