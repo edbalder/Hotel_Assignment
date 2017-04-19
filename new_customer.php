@@ -8,27 +8,15 @@
 	}
 	
 	if(!empty($_POST)){
-		ini_set('file-uploads',true);
-		if($_FILES['customerImage']['size']>0 && $_FILES['customerImage']['size']<2000000){
-			$fileName = $_FILES['customerImage']['name'];
-			$tempName = $_FILES['customerImage']['tmp_name'];
-			$filesize = $_FILES['customerImage']['size'];
-			$filetype = $_FILES['customerImage']['type'];
-			
-			$filetype = (get_magic_quotes_gpc() == 0
-				? mysql_real_escape_string($filetype)
-				: mysql_real_escape_string(stripslashes($_FILES['customerImage'])));
-				
-			$fp = fopen($tempName, 'r');
-			$content = fread($fp, filesize($tempName));
-			$content = addslashes($content);
-			
-			fclose($fp);
-			
-			if(!get_magic_quotes_gpc()) {
-				$filename = addslashes($filename);
-			}
-		}
+		$fileName = $_FILES['customerImage']['name'];
+		$tmpName  = $_FILES['customerImage']['tmp_name'];
+		$fileSize = $_FILES['customerImage']['size'];
+		$fileType = $_FILES['customerImage']['type'];
+		$fileContent = file_get_contents($tmpName);
+		
+		echo '$fileName = '.$fileName;
+		echo '$fileType = '.$fileType;
+		
 		
 		$id = $_POST['id'];
 		$cardNumber = $_POST['cardNumber'];
@@ -37,9 +25,9 @@
 		
 		$pdo = Database::connect();
         $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-        $sql = "INSERT INTO guests (memberid,cardNumber,phoneNumber,name) values(?, ?, ?, ?)";
+        $sql = "INSERT INTO guests (memberid,cardNumber,phoneNumber,name,img_name,img_size,img_type,img_content) values(?, ?, ?, ?, ?, ?, ?, ?)";
         $q = $pdo->prepare($sql);
-        $q->execute(array($id,$cardNumber,$phoneNumber,$name));
+        $q->execute(array($id,$cardNumber,$phoneNumber,$name,$fileName,$fileSize,$fileType,$fileContent));
         Database::disconnect();
         header("Location: sale_menu.php");
 	}
@@ -62,7 +50,7 @@
                         <h3>Create a Customer</h3>
                     </div>
              
-                    <form class="form-horizontal" action="new_customer.php" method="post">
+                    <form class="form-horizontal" action="new_customer.php" method="post" enctype="multipart/form-data">
                       <div class="control-group">
                         <label class="control-label">ID Number</label>
                         <div class="controls">

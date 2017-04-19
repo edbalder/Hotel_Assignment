@@ -25,8 +25,14 @@
 		}
         Database::disconnect();
     ?>
-
-	<a href="sale_menu.php" class="btn btn-success">Sale</a></br>
-	<a href="search_transaction.php" class="btn btn-success">Search Transactions</a>
+	<body>
+	<div class="container">
+		<div class="row">
+			<a href="sale_menu.php" class="btn btn-success">Sale</a></br>
+			<a href="search_transaction.php" class="btn btn-success">Search Transactions</a></br>
+			<a class="btn btn-danger" href="logout.php">Log Out</a> 
+		</div>
+	</div>
+	</body>
 
 </html> 

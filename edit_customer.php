@@ -22,6 +22,15 @@
 		$nameError = null;
 		$cardNumberError = null;
 		$phoneNumberError = null;
+		
+		if (!empty($_FILES['customerImage']['size'])){
+			
+			$fileName = $_FILES['customerImage']['name'];
+			$tmpName  = $_FILES['customerImage']['tmp_name'];
+			$fileSize = $_FILES['customerImage']['size'];
+			$fileType = $_FILES['customerImage']['type'];
+			$fileContent = file_get_contents($tmpName);
+		}
         
         // keep track post values
         $newid = $_POST['memberid'];
@@ -53,19 +62,26 @@
         
         
         // update data
-        if ($valid) {
-			try {
+        if (!empty($_FILES['customerImage']['size'])) {
+			
 				$pdo = Database::connect();
+				$pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+				$sql = "UPDATE guests set memberid = ?, name = ?, cardNumber =?, phoneNumber =?, img_name=?, img_size=?, img_type=?,img_content=? WHERE id = ?";
+				$q = $pdo->prepare($sql);
+				$q->execute(array($newid,$name,$cardNumber,$phoneNumber,$fileName,$fileSize,$fileType,$fileContent,$id));
+				Database::disconnect();
+				header("Location: sale_menu.php");
+			
+		} else {
+			$pdo = Database::connect();
 				$pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 				$sql = "UPDATE guests set memberid = ?, name = ?, cardNumber =?, phoneNumber =? WHERE id = ?";
 				$q = $pdo->prepare($sql);
 				$q->execute(array($newid,$name,$cardNumber,$phoneNumber,$id));
 				Database::disconnect();
 				header("Location: sale_menu.php");
-			} catch (Exception $e) {
-				echo $e->getMessage();
-			}
-        } 
+		}
+		 
     } else {
         $pdo = Database::connect();
         $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
@@ -77,6 +93,14 @@
         $name = $data['name'];
         $cardNumber = $data['cardNumber'];
 		$phoneNumber = $data['phoneNumber'];
+		
+		$fileName = $data['img_name'];
+		echo 'File: '. $fileName . ' initialized';
+		$fileSize = $data['img_size'];
+		$fileType = $data['img_type'];
+		$fileContent = $data['img_content'];
+		
+		//print_r($data);
         Database::disconnect();
     }
 ?>
@@ -97,7 +121,7 @@
                         <h3>Update a Customer</h3>
                     </div>
              
-                    <form class="form-horizontal" action="edit_customer.php?id=<?php echo $id?>" method="post">
+                    <form class="form-horizontal" action="edit_customer.php?id=<?php echo $id?>" method="post" enctype="multipart/form-data">
                       <div class="control-group <?php echo !empty($idError)?'error':'';?>">
                         <label class="control-label">ID</label>
                         <div class="controls">
@@ -138,11 +162,25 @@
                         </div>
                       </div>
 					  
+					  <input type="file" name="customerImage" id="customerImage" />
+					  
                       <div class="form-actions">
                           <button type="submit" class="btn btn-success">Update</button>
                           <a class="btn" href="sale_menu.php">Back</a>
                         </div>
                     </form>
+					
+					<div class='control-group col-md-6'>
+					<div class="controls ">
+					<?php 
+					//if ($data['img_size'] > 0) 
+						echo '<img  height=20%; width=60%; src="data:image/jpeg;base64,' . 
+							base64_encode( $data['img_content'] ) . '" />'; 
+					//else 
+						//echo 'No photo on file.';
+					?><!-- converts to base 64 due to the need to read the binary files code and display img -->
+					</div>
+				</div>
                 </div>
                  
     </div> <!-- /container -->
